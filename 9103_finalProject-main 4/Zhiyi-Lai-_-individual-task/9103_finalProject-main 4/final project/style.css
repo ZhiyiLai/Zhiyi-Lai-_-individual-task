@@ -1,0 +1,17 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+}
+
+#myAudio {
+  width: 100px;
+  /* 设置宽度 */
+  height: 40px;
+  /* 设置高度 */
+  background-color: #333;
+}
