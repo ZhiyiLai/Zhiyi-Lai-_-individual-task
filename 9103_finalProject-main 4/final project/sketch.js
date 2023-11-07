@@ -1,7 +1,15 @@
+let song;
+let audioContext;
+let fft;
+let button;
 let circles = [];
 let scl = 1;
 let col1 = "#ea3e3e";
 let col2 = "#519365";
+
+function preload() {
+  song = loadSound("music.mp3");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -9,6 +17,12 @@ function setup() {
   let scl2 = height / 650;
   scl = min(scl1, scl2);
   background(57, 64, 68);
+  audioContext = getAudioContext();
+  song.play();
+  fft = new p5.FFT(0.9, 128);
+  button = createButton("Play / Pause");
+  button.position(width - 200, height - 100);
+  button.mousePressed(togglePlay);
 
   rectMode(CORNERS);
   strokeWeight(3);
@@ -123,7 +137,16 @@ function draw() {
   line(274, 173, 277, 198);
   line(204, 173, 203, 198);
 
+  let spectrum = fft.analyze();
+  noStroke();
+  translate(width / 2, height / 2);
 
+  for (let i = 0; i < spectrum.length; i++) {
+    let angle = map(i, 0, spectrum.length, 0, TWO_PI);
+    let radius = map(spectrum[i], 0, 255, 0, width / 2);
+    fill(spectrum[i], 50, 100);
+    ellipse(0, 0, radius, radius);
+  }
 }
 // function windowResized() {
 //   resizeCanvas(windowWidth, windowHeight);
@@ -157,3 +180,13 @@ class HalfCircle {
   }
 }
 
+function togglePlay() {
+  if (song.isPlaying()) {
+    song.pause();
+    noloop();
+  }
+  else {
+    song.play();
+    loop();
+  }
+}
